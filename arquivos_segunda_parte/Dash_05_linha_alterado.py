@@ -41,6 +41,7 @@ def funcao_linha(dataframe, linguagem):
     figura_linha = px.line(x=anos_agrupados_linha, y=media_ling_linha, markers=True)
     figura_linha.update_xaxes(title='Ano',  ticks='outside')
     figura_linha.update_yaxes(title='Percentual', ticks='outside')
+    figura_linha.update_layout(template='plotly_dark')
     # retorna o gráfico gerado
     return figura_linha
 

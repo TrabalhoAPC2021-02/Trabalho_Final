@@ -40,6 +40,7 @@ def funcao_pizza(dataframe):
     dados_y_pizza = media_pizza[0:15]
     # gera o gráfico de pizza
     figura_pizza = px.pie(names=dados_x_pizza, values=dados_y_pizza)
+    figura_pizza.update_layout(template='plotly_dark')
     # retorna o gráfico gerado
     return figura_pizza
 

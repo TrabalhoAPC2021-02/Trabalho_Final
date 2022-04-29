@@ -38,6 +38,7 @@ def funcao_mapa(dataframe):
     figura_mapa = px.scatter_geo(df_sv_mapa, locations='Country',
                                  size='Average annual salary [USD]', color=country_mapa,
                                  projection="natural earth")
+    figura_mapa.update_layout(template='plotly_dark')
     # retorna o gráfico gerado
     return figura_mapa
 
