@@ -5,9 +5,9 @@ import Dash_03_barraHoriz_alterado  # funcao que plota o grafico de barra horizo
 import Dash_04_pizza_alterado  # funcao que plota o grafico de pizza
 import Dash_05_linha_alterado  # funcao que plota o grafico de linha
 import Dash_06_barraVert_alterado  # funcao que plota o grafico de barra vertical
-import pandas as pd    # biblioteca utilizada para arquivos em dataframe
+import pandas as pd  # biblioteca utilizada para arquivos em dataframe
 from dash import Dash, html, dcc, Input, Output  # biblioteca para as funcoes do dash
-import dash_bootstrap_components as dbc
+import dash_bootstrap_components as dbc  # biblioteca para o tema dark do dash
 
 if __name__ == '__main__':
 
@@ -20,10 +20,11 @@ if __name__ == '__main__':
     opcoes_pizza = list(df_pizza['Date'].unique())  # lista de anos sem repeticao
     opcoes_pizza.sort()  # ordenando a lista
     df_pizza_filtrado = df_pizza[df_pizza['Date'] == 2021]  # filtrando os dados para o primeiro gráfico
-    # chamando a funcao q plota o grafico - parametro: dataframe ja filtrado por ano
+    # chamando a funcao que plota o grafico - parametro: dataframe ja filtrado por ano
     fig_pizza = Dash_04_pizza_alterado.funcao_pizza(df_pizza_filtrado)
     titulo1_pizza = 'As 15 linguagens de programação mais usadas no ano de 2021'  # titulo maior - padrão
     titulo2_pizza = '.'  # titulo menor
+    texto_fonte_pizza = 'Fonte: kaggle - disponível em: https://www.kaggle.com/datasets/muhammadkhalid/most-popular-programming-languages-since-2004'
     # =============================================================================================
     # Grafico de linha - evolucao de uso da linguagem
     # =============================================================================================
@@ -36,6 +37,7 @@ if __name__ == '__main__':
     fig_linha = Dash_05_linha_alterado.funcao_linha(df_linha, 'Python')
     titulo1_linha = 'Evolução do uso da linguagem Python nos últimos 17 anos'
     titulo2_linha = 'Dados de 2005 a 2021'
+    texto_fonte_linha = 'Fonte: kaggle - disponível em: https://www.kaggle.com/datasets/muhammadkhalid/most-popular-programming-languages-since-2004'
     # =============================================================================================
     # Grafico de barras horizontais - Diversidade empresas
     # =============================================================================================
@@ -47,6 +49,7 @@ if __name__ == '__main__':
     fig_barraHoriz = Dash_03_barraHoriz_alterado.funcao_barraHoriz(df_barraHoriz_filtrado)  # parametro: dataframe filtrado por ano
     titulo1_barraHoriz = 'Distribuição entre homens e mulheres contratados pelas principais empresas de tecnologia em 2018'
     titulo2_barraHoriz = '.'
+    texto_fonte_barraHoriz = 'Fonte: Data.world - disponível em: https://data.world/makeovermonday/2018w46'
     # =============================================================================================
     # Grafico de funil - Comparacao salarios CLT e terceirizados
     # =============================================================================================
@@ -57,6 +60,7 @@ if __name__ == '__main__':
     fig_funil = Dash_02_funil_alterado.funcao_funil_gerargrafico(df_funil, opcoes_funil)
     titulo1_funil = 'Comparação entre salários de contratados pela CLT e salários de terceirizados.'
     titulo2_funil = 'Valores em reais.'
+    texto_fonte_funil = 'Fonte: APINFO - disponível em: https://www.apinfo2.com/apinfo/informacao/p21sal-br.cfm'
     # =============================================================================================
     # Grafico de barra vertical - Comparacao salarios CLT e terceirizados por especialidade
     # =============================================================================================
@@ -67,6 +71,7 @@ if __name__ == '__main__':
     fig_barraVert = Dash_06_barraVert_alterado.funcao_barraVert(df_barraVert, 'Programador')
     titulo1_barraVert = 'Comparação entre salários de contratados pela CLT e salários de terceirizados por especialidade'
     titulo2_barraVert = 'Cargo: Programador'
+    texto_fonte_barraVert = 'Fonte: APINFO - disponível em: https://www.apinfo2.com/apinfo/informacao/p21sal-br.cfm'
     # =============================================================================================
     # Grafico de mapa - Medias salariais G12
     # =============================================================================================
@@ -76,10 +81,9 @@ if __name__ == '__main__':
     fig_mapa = Dash_01_mapa_alterado.funcao_mapa(df_mapa)  # grafico padrao - dataframe inteiro
     titulo1_mapa = 'Média de salário anual dos profissionais de TI dos países do G12* de 2017 a 2021'
     titulo2_mapa = 'Média salarial em dólares.'
-    titulo3_mapa = '*Exceto Japão e Coréia do Sul, ' \
-                   'por não ter dados. No lugar desses foram adicionados Austrália e ' \
-                   'África do Sul.'
-
+    titulo3_mapa = '*Exceto Japão e Coréia do Sul, por não ter dados. No lugar desses foram adicionados Austrália e África do Sul.'
+    texto_fonte_mapa = 'Fonte: Data.world - disponível em: https://data.world/finance/data-professional-salary-survey'
+    # =============================================================================================
 
     # criar o aplicativo do flask
     # inicializacao do aplicativo
@@ -94,16 +98,16 @@ if __name__ == '__main__':
                                                          'font-size': '60px', 'font-weight': 'bold',
                                                          'text-shadow': '2px 2px 2px red',
                                                          'text-align': 'center', 'letter-spacing': '4px'})
-            # formatacao CSS para cor de fundo, largura da coluna e estilo da borda da celula da tabela
-            ], style={'background-color': 'rgb(23, 23, 23)',  'width': '1300px'})
+                # formatacao CSS para cor de fundo, largura da coluna e estilo da borda da celula da tabela
+                ], style={'background-color': 'rgb(23, 23, 23)',  'width': '1300px'})
         ]),
         html.Br(),
         html.Br(),
         html.Div(children=[
             html.Td(children=[  # cria uma coluna nova
                 # titulos em html - H1 - letra maior ate H5 - letra menor
-                html.H2(children=titulo1_pizza, id='titulo1-pizza'),
-                html.H4(children=titulo2_pizza),
+                html.H3(children=titulo1_pizza, id='titulo1-pizza'),
+                html.H5(children=titulo2_pizza),
                 dcc.Slider(  # dcc = slider
                     df_pizza['Date'].min(),  # cria o range do slider
                     df_pizza['Date'].max(),
@@ -113,34 +117,37 @@ if __name__ == '__main__':
                     marks={str(Date): str(Date) for Date in df_pizza['Date'].unique()},
                     id='slider-pizza'),
                 # grafico plotado pela funcao que foi chamada
-                dcc.Graph(id='grafico-pizza', figure=fig_pizza)
+                dcc.Graph(id='grafico-pizza', figure=fig_pizza),
+                html.H5(children=texto_fonte_pizza, style={'font-size': '12px'}),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '650px'}),
             html.Td(children=[
-                html.H2(children=titulo1_linha, id="titulo1-linha"),
-                html.H4(children=titulo2_linha),
+                html.H3(children=titulo1_linha, id="titulo1-linha"),
+                html.H5(children=titulo2_linha),
                 # dcc = dropdown - lista de valores, value = valor padrão, id = nome do dcc
                 dcc.Dropdown(opcoes_linha, value='Python', id='dropdown-linha',
-                              style={'color': 'black'}),
-                dcc.Graph(id='grafico-linha', figure=fig_linha)
+                             style={'color': 'black'}),
+                dcc.Graph(id='grafico-linha', figure=fig_linha),
+                html.H5(children=texto_fonte_linha, style={'font-size': '12px'}),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '650px'})
         ]),
         html.Br(),
         html.Div(children=[
             html.Td(children=[
-                html.H2(children=titulo1_barraHoriz, id="titulo1-barra"),
-                html.H4(children=titulo2_barraHoriz),
+                html.H3(children=titulo1_barraHoriz, id="titulo1-barraHoriz"),
+                html.H5(children=titulo2_barraHoriz),
                 # dcc = radioItems - lista de valores, valor padrão, id = nome, inline =
                 dcc.RadioItems(opcoes_barraHoriz, 2018,
-                               id='radioitems-barra',
+                               id='radioitems-barraHoriz',
                                style={'background-color': 'rgb(23, 23, 23)'}),
-                dcc.Graph(id='grafico-barra', figure=fig_barraHoriz)
+                dcc.Graph(id='grafico-barraHoriz', figure=fig_barraHoriz),
+                html.H5(children=texto_fonte_barraHoriz, style={'font-size': '12px'}),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '1300px'})
         ]),
         html.Br(),
         html.Div(children=[
             html.Td(children=[
-                html.H2(children=titulo1_funil),
-                html.H4(children=titulo2_funil),
+                html.H3(children=titulo1_funil),
+                html.H5(children=titulo2_funil),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '1300px',
                       'vertical-align': 'top'}),
         ]),
@@ -149,43 +156,46 @@ if __name__ == '__main__':
                 dcc.Checklist(opcoes_funil,
                               ['Analista de Suporte', 'Programador', 'Analista Programador', 'Analista de sistemas'],
                               id='checklist-funil', inline=True,
-                              style={'display': 'block', 'background-color': 'rgb(23, 23, 23)'}),
+                              style={'display': 'block', 'background-color': 'rgb(23, 23, 23)',
+                                     'font-size': '14px'}),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '500px',
                       'columns': '2'}),
             html.Td(children=[
-                dcc.Graph(id='grafico-funil', figure=fig_funil)
+                dcc.Graph(id='grafico-funil', figure=fig_funil),
+                html.H5(children=texto_fonte_funil, style={'font-size': '12px'}),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '800px',
                       'vertical-align': 'top'})
         ]),
         html.Br(),
         html.Div(children=[
             html.Td(children=[
-                html.H2(children=titulo1_barraVert, id="titulo1-barraVert"),
-                html.H3(children=titulo2_barraVert, id="titulo2-barraVert"),
+                html.H3(children=titulo1_barraVert, id="titulo1-barraVert"),
+                html.H5(children=titulo2_barraVert, id="titulo2-barraVert"),
                 dcc.Dropdown(opcoes_barraVert, value='Programador', id='dropdown-barraVert',
                              style={'color': 'black'}),
-                dcc.Graph(id='grafico-barraVert', figure=fig_barraVert)
+                dcc.Graph(id='grafico-barraVert', figure=fig_barraVert),
+                html.H5(children=texto_fonte_barraVert, style={'font-size': '12px'}),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '1300px',
                       'vertical-align': 'top'})
         ]),
         html.Br(),
         html.Div(children=[
             html.Td(children=[
-                html.H2(children=titulo1_mapa, id="titulo1-mapa"),
-                html.H4(children=titulo2_mapa),
-                html.H5(children=titulo3_mapa),
+                html.H3(children=titulo1_mapa, id="titulo1-mapa"),
+                html.H5(children=titulo2_mapa),
+                html.H5(children=titulo3_mapa, style={'font-size': '13px'}),
                 # dcc = dropdown - lista de valores, value = valor padrão, id = nome do dcc
                 dcc.Dropdown(opcoes_mapa, value='2017 a 2021', id='dropdown-mapa',
                              style={'color': 'black'}),
-                dcc.Graph(id='grafico-mapa', figure=fig_mapa)
+                dcc.Graph(id='grafico-mapa', figure=fig_mapa),
+                html.H5(children=texto_fonte_mapa, style={'font-size': '12px'}),
             ], style={'background-color': 'rgb(23, 23, 23)', 'width': '1300px'})
         ])
     ])
 
-
     # decorator - grafico pizza - para quando os valores do dcc for alterado
     @app.callback(
-        # quem vai ser alterado? nome(id) e qual caracteristica
+        # quem vai ser alterado - nome(id) e qual caracteristica
         Output('grafico-pizza', 'figure'),  # altera o grafico
         Output('titulo1-pizza', 'children'),  # altera o titulo1
         Input('slider-pizza', 'value'),  # value = informacao selecionada do dcc
@@ -193,10 +203,10 @@ if __name__ == '__main__':
     def alterar_pizza(value):
         # altera o titulo1
         titulo1_pizza_alterado = f'As 15 linguagens de programação mais usadas no ano de {value}'
-        # cria um novo dataframe filtrado pelo valor escolhido
-        df_pizza_filtrado = df_pizza[df_pizza['Date'] == int(value)]
+        # cria um dataframe filtrado pelo valor escolhido
+        df_pizza_filtrado_alterado = df_pizza[df_pizza['Date'] == int(value)]
         # chama a funcao novamente para plotar o grafico com o dado escolhido
-        fig_pizza_alterada = Dash_04_pizza_alterado.funcao_pizza(df_pizza_filtrado)
+        fig_pizza_alterada = Dash_04_pizza_alterado.funcao_pizza(df_pizza_filtrado_alterado)
         # retorna o que foi alterado, na ordem dos Outputs
         return fig_pizza_alterada, titulo1_pizza_alterado
 
@@ -214,16 +224,16 @@ if __name__ == '__main__':
 
     # decorator - grafico barra - segue o mesmo raciocinio do primeiro callback
     @app.callback(
-        Output('grafico-barra', 'figure'),
-        Output('titulo1-barra', 'children'),
-        Input('radioitems-barra', 'value')  # dá a informacao selecionada
+        Output('grafico-barraHoriz', 'figure'),
+        Output('titulo1-barraHoriz', 'children'),
+        Input('radioitems-barraHoriz', 'value')  # dá a informacao selecionada
     )
-    def alterar_barra(value):
-        titulo1_barra = f'Distribuição entre homens e mulheres contratados pelas principais empresas de tecnologia em {value}'
-        df_barra_filtrado = dados_csv_barraHoriz[dados_csv_barraHoriz['Date'] == int(value)]
-        figura_barra_alterada = Dash_03_barraHoriz_alterado.funcao_barraHoriz(df_barra_filtrado)
-        return figura_barra_alterada, titulo1_barra
-
+    def alterar_barraHoriz(value):
+        titulo1_barraHoriz_alterado = f'Distribuição entre homens e mulheres contratados ' \
+                        f'pelas principais empresas de tecnologia em {value}'
+        df_barraHoriz_filtrado = dados_csv_barraHoriz[dados_csv_barraHoriz['Date'] == int(value)]
+        figura_barraHoriz_alterada = Dash_03_barraHoriz_alterado.funcao_barraHoriz(df_barraHoriz_filtrado)
+        return figura_barraHoriz_alterada, titulo1_barraHoriz_alterado
 
     # decorator - grafico funil - segue o mesmo raciocinio do primeiro callback
     @app.callback(
@@ -234,7 +244,6 @@ if __name__ == '__main__':
         figura_funil_alterada = Dash_02_funil_alterado.funcao_funil_gerargrafico(df_funil, value)
         return figura_funil_alterada
 
-
     # decorator - grafico barra vertical - segue o mesmo raciocinio do primeiro callback
     @app.callback(
         Output('grafico-barraVert', 'figure'),
@@ -242,10 +251,9 @@ if __name__ == '__main__':
         Input('dropdown-barraVert', 'value')
     )
     def alterar_barraVert(value):
-        titulo2_barraVert = f'Cargo: {value}'
+        titulo2_barraVert_alterada = f'Cargo: {value}'
         figura_barraVert_alterada = Dash_06_barraVert_alterado.funcao_barraVert(df_barraVert, value)
-        return figura_barraVert_alterada, titulo2_barraVert
-
+        return figura_barraVert_alterada, titulo2_barraVert_alterada
 
     # decorator - grafico mapa
     @app.callback(
