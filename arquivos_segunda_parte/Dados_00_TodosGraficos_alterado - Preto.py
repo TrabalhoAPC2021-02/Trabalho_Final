@@ -1,13 +1,25 @@
 # Importanto as bibliotecas
-import Dash_01_mapa_alterado  # funcao que plota o grafico de mapa
-import Dash_02_funil_alterado  # funcao que plota o grafico de funil
-import Dash_03_barraHoriz_alterado  # funcao que plota o grafico de barra horizontal
-import Dash_04_pizza_alterado  # funcao que plota o grafico de pizza
-import Dash_05_linha_alterado  # funcao que plota o grafico de linha
-import Dash_06_barraVert_alterado  # funcao que plota o grafico de barra vertical
+import Dash_01_mapa_alterado as D_mapa  # funcao que plota o grafico de mapa
+import Dash_02_funil_alterado as D_funil  # funcao que plota o grafico de funil
+import Dash_03_barraHoriz_alterado as D_barraH  # funcao que plota o grafico de barra horizontal
+import Dash_04_pizza_alterado as D_pizza  # funcao que plota o grafico de pizza
+import Dash_05_linha_alterado as D_linha  # funcao que plota o grafico de linha
+import Dash_06_barraVert_alterado as D_barraV  # funcao que plota o grafico de barra vertical
 import pandas as pd  # biblioteca utilizada para arquivos em dataframe
 from dash import Dash, html, dcc, Input, Output  # biblioteca para as funcoes do dash
 import dash_bootstrap_components as dbc  # biblioteca para o tema dark do dash
+
+
+def funcao_filtrar_ano(dataframe, coluna_a_ser_filtrada, valor_filtro):
+    lista_dados_filtrados = []
+    nomes_colunas_filtrados = list(dataframe.columns)
+    for x in dataframe.values:
+        if x[coluna_a_ser_filtrada] == valor_filtro:
+            lista_dados_filtrados.append(x)
+    dataframe_filtrado = pd.DataFrame(lista_dados_filtrados, columns=nomes_colunas_filtrados)
+    #  print(dataframe_filtrado)
+    return dataframe_filtrado
+
 
 if __name__ == '__main__':
 
@@ -19,9 +31,10 @@ if __name__ == '__main__':
     # criando a lista de opcoes (sem repeticao) para ser usada no dash core component (dcc)
     opcoes_pizza = list(df_pizza['Date'].unique())  # lista de anos sem repeticao
     opcoes_pizza.sort()  # ordenando a lista
-    df_pizza_filtrado = df_pizza[df_pizza['Date'] == 2021]  # filtrando os dados para o primeiro gráfico
+    df_pizza_filtrado = funcao_filtrar_ano(df_pizza, 0, 2021)
+    #df_pizza_filtrado = df_pizza[df_pizza['Date'] == 2021]  # filtrando os dados para o primeiro gráfico
     # chamando a funcao que plota o grafico - parametro: dataframe ja filtrado por ano
-    fig_pizza = Dash_04_pizza_alterado.funcao_pizza(df_pizza_filtrado)
+    fig_pizza = D_pizza.funcao_pizza(df_pizza_filtrado)
     titulo1_pizza = 'As 15 linguagens de programação mais usadas no ano de 2021'  # titulo maior - padrão
     titulo2_pizza = '.'  # titulo menor
     texto_fonte_pizza = 'Fonte: kaggle - disponível em: https://www.kaggle.com/datasets/muhammadkhalid/most-popular-programming-languages-since-2004'
@@ -34,7 +47,7 @@ if __name__ == '__main__':
     opcoes_linha = nomes_colunas_linha[1:len(nomes_colunas_linha)]  # retira o nome da 1ª coluna - Data
     opcoes_linha.sort()
     # chamando a funcao q plota o grafico - parametro: dataframe inteiro e nome da linguagem padrão
-    fig_linha = Dash_05_linha_alterado.funcao_linha(df_linha, 'Python')
+    fig_linha = D_linha.funcao_linha(df_linha, 'Python')
     titulo1_linha = 'Evolução do uso da linguagem Python nos últimos 17 anos'
     titulo2_linha = 'Dados de 2005 a 2021'
     texto_fonte_linha = 'Fonte: kaggle - disponível em: https://www.kaggle.com/datasets/muhammadkhalid/most-popular-programming-languages-since-2004'
@@ -45,8 +58,9 @@ if __name__ == '__main__':
     dados_csv_barraHoriz = pd.read_csv('03_Employee Diversity in Tech.csv', ';')
     opcoes_barraHoriz = list(dados_csv_barraHoriz['Date'].unique())  # lista de anos sem repeticao
     opcoes_barraHoriz.sort()
-    df_barraHoriz_filtrado = dados_csv_barraHoriz[dados_csv_barraHoriz['Date'] == 2018]
-    fig_barraHoriz = Dash_03_barraHoriz_alterado.funcao_barraHoriz(df_barraHoriz_filtrado)  # parametro: dataframe filtrado por ano
+    df_barraHoriz_filtrado = funcao_filtrar_ano(dados_csv_barraHoriz, 0, 2018)
+    #df_barraHoriz_filtrado = dados_csv_barraHoriz[dados_csv_barraHoriz['Date'] == 2018]
+    fig_barraHoriz = D_barraH.funcao_barraHoriz(df_barraHoriz_filtrado)  # parametro: dataframe filtrado por ano
     titulo1_barraHoriz = 'Distribuição entre homens e mulheres contratados pelas principais empresas de tecnologia em 2018'
     titulo2_barraHoriz = '.'
     texto_fonte_barraHoriz = 'Fonte: Data.world - disponível em: https://data.world/makeovermonday/2018w46'
@@ -57,7 +71,7 @@ if __name__ == '__main__':
     df_funil = pd.read_excel('02.1_salarios_CLT_Terceirizado.xlsx')
     opcoes_funil = list(df_funil['Cargo'].unique())
     opcoes_funil.sort()
-    fig_funil = Dash_02_funil_alterado.funcao_funil_gerargrafico(df_funil, opcoes_funil)
+    fig_funil = D_funil.funcao_funil_gerargrafico(df_funil, opcoes_funil)
     titulo1_funil = 'Comparação entre salários de contratados pela CLT e salários de terceirizados.'
     titulo2_funil = 'Valores em reais.'
     texto_fonte_funil = 'Fonte: APINFO - disponível em: https://www.apinfo2.com/apinfo/informacao/p21sal-br.cfm'
@@ -68,7 +82,7 @@ if __name__ == '__main__':
     df_barraVert = pd.read_excel('02.1_salarios_CLT_Terceirizado.xlsx')
     opcoes_barraVert = ['Programador', 'Analista Programador', 'Analista de Suporte', 'Analista de sistemas']
     opcoes_barraVert.sort()
-    fig_barraVert = Dash_06_barraVert_alterado.funcao_barraVert(df_barraVert, 'Programador')
+    fig_barraVert = D_barraV.funcao_barraVert(df_barraVert, 'Programador')
     titulo1_barraVert = 'Comparação entre salários de contratados pela CLT e salários de terceirizados por especialidade'
     titulo2_barraVert = 'Cargo: Programador'
     texto_fonte_barraVert = 'Fonte: APINFO - disponível em: https://www.apinfo2.com/apinfo/informacao/p21sal-br.cfm'
@@ -78,7 +92,7 @@ if __name__ == '__main__':
     df_mapa = pd.read_excel('01_Data_Professional_full.xlsx')
     opcoes_mapa = list(df_mapa['Survey Year'].unique())  # lista de anos sem repeticao
     opcoes_mapa.append('2017 a 2021')
-    fig_mapa = Dash_01_mapa_alterado.funcao_mapa(df_mapa)  # grafico padrao - dataframe inteiro
+    fig_mapa = D_mapa.funcao_mapa(df_mapa)  # grafico padrao - dataframe inteiro
     titulo1_mapa = 'Média de salário anual dos profissionais de TI dos países do G12* de 2017 a 2021'
     titulo2_mapa = 'Média salarial em dólares.'
     titulo3_mapa = '*Exceto Japão e Coréia do Sul, por não ter dados. No lugar desses foram adicionados Austrália e África do Sul.'
@@ -204,9 +218,10 @@ if __name__ == '__main__':
         # altera o titulo1
         titulo1_pizza_alterado = f'As 15 linguagens de programação mais usadas no ano de {value}'
         # cria um dataframe filtrado pelo valor escolhido
-        df_pizza_filtrado_alterado = df_pizza[df_pizza['Date'] == int(value)]
+        # df_pizza_filtrado_alterado = df_pizza[df_pizza['Date'] == int(value)]
+        df_pizza_filtrado_alterado = funcao_filtrar_ano(df_pizza, 0, int(value))
         # chama a funcao novamente para plotar o grafico com o dado escolhido
-        fig_pizza_alterada = Dash_04_pizza_alterado.funcao_pizza(df_pizza_filtrado_alterado)
+        fig_pizza_alterada = D_pizza.funcao_pizza(df_pizza_filtrado_alterado)
         # retorna o que foi alterado, na ordem dos Outputs
         return fig_pizza_alterada, titulo1_pizza_alterado
 
@@ -219,7 +234,7 @@ if __name__ == '__main__':
     def alterar_linha(value):
         titulo1_linha_alterado = f'Evolução do uso da linguagem {value} nos últimos 17 anos'
         # chama a funcao novamente para plotar o grafico com a linguagem escolhido
-        figura_linha_alterada = Dash_05_linha_alterado.funcao_linha(df_linha, value)
+        figura_linha_alterada = D_linha.funcao_linha(df_linha, value)
         return figura_linha_alterada, titulo1_linha_alterado
 
     # decorator - grafico barra - segue o mesmo raciocinio do primeiro callback
@@ -231,8 +246,9 @@ if __name__ == '__main__':
     def alterar_barraHoriz(value):
         titulo1_barraHoriz_alterado = f'Distribuição entre homens e mulheres contratados ' \
                         f'pelas principais empresas de tecnologia em {value}'
-        df_barraHoriz_filtrado = dados_csv_barraHoriz[dados_csv_barraHoriz['Date'] == int(value)]
-        figura_barraHoriz_alterada = Dash_03_barraHoriz_alterado.funcao_barraHoriz(df_barraHoriz_filtrado)
+        df_barraHoriz_filtrado = funcao_filtrar_ano(dados_csv_barraHoriz, 0, int(value))
+        # df_barraHoriz_filtrado = dados_csv_barraHoriz[dados_csv_barraHoriz['Date'] == int(value)]
+        figura_barraHoriz_alterada = D_barraH.funcao_barraHoriz(df_barraHoriz_filtrado)
         return figura_barraHoriz_alterada, titulo1_barraHoriz_alterado
 
     # decorator - grafico funil - segue o mesmo raciocinio do primeiro callback
@@ -241,7 +257,7 @@ if __name__ == '__main__':
         Input('checklist-funil', 'value')
     )
     def alterar_funil(value):
-        figura_funil_alterada = Dash_02_funil_alterado.funcao_funil_gerargrafico(df_funil, value)
+        figura_funil_alterada = D_funil.funcao_funil_gerargrafico(df_funil, value)
         return figura_funil_alterada
 
     # decorator - grafico barra vertical - segue o mesmo raciocinio do primeiro callback
@@ -252,7 +268,7 @@ if __name__ == '__main__':
     )
     def alterar_barraVert(value):
         titulo2_barraVert_alterada = f'Cargo: {value}'
-        figura_barraVert_alterada = Dash_06_barraVert_alterado.funcao_barraVert(df_barraVert, value)
+        figura_barraVert_alterada = D_barraV.funcao_barraVert(df_barraVert, value)
         return figura_barraVert_alterada, titulo2_barraVert_alterada
 
     # decorator - grafico mapa
@@ -265,12 +281,13 @@ if __name__ == '__main__':
         if value == '2017 a 2021':
             # usa a base de dados toda
             titulo1_mapa_alterado = f'Média de salário anual dos profissionais de TI dos países do G12* de {value}'
-            fig_mapa_alterada = Dash_01_mapa_alterado.funcao_mapa(df_mapa)
+            fig_mapa_alterada = D_mapa.funcao_mapa(df_mapa)
         else:
             # usa a base de dados filtrada pelo ano escolhido
             titulo1_mapa_alterado = f'Média de salário anual dos profissionais de TI dos países do G12* de {value}'
-            df_mapa_filtrado = df_mapa[df_mapa['Survey Year'] == value]
-            fig_mapa_alterada = Dash_01_mapa_alterado.funcao_mapa(df_mapa_filtrado)
+            df_mapa_filtrado = funcao_filtrar_ano(df_mapa, 0, int(value))
+            # df_mapa_filtrado = df_mapa[df_mapa['Survey Year'] == value]
+            fig_mapa_alterada = D_mapa.funcao_mapa(df_mapa_filtrado)
         return fig_mapa_alterada, titulo1_mapa_alterado
 
     # colocando o aplicativo no ar (servidor local)
